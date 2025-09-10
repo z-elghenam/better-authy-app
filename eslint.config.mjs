@@ -20,6 +20,7 @@ const eslintConfig = [
       "next-env.d.ts",
     ],
   },
+  { ignorePatterns: ["lib/generated/**/*"] },
 ];
 
 export default eslintConfig;
