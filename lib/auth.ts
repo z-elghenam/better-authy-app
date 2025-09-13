@@ -4,7 +4,7 @@ import prisma from "./prisma";
 import { nextCookies } from "better-auth/next-js";
 import { hashPassword, verifyPasswordHash } from "./password";
 import { createAuthMiddleware, APIError } from "better-auth/api";
-import { VALID_DOMAINS } from "./utils";
+import { normalizeName, VALID_DOMAINS } from "./utils";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -30,6 +30,18 @@ export const auth = betterAuth({
             message: "Invalid domain. Please use a valid email.",
           });
         }
+
+        const name = normalizeName(ctx.body.name);
+
+        return {
+          context: {
+            ...ctx,
+            body: {
+              ...ctx.body,
+              name,
+            },
+          },
+        };
       }
     }),
   },
