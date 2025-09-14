@@ -5,6 +5,10 @@ import { nextCookies } from "better-auth/next-js";
 import { hashPassword, verifyPasswordHash } from "./password";
 import { createAuthMiddleware, APIError } from "better-auth/api";
 import { normalizeName, VALID_DOMAINS } from "./utils";
+import { admin } from "better-auth/plugins";
+import { UserRole } from "./generated/prisma";
+
+import { ac, roles } from "@/lib/permissions";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -45,6 +49,31 @@ export const auth = betterAuth({
       }
     }),
   },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user, ctx) => {
+          const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(";") ?? [];
+
+          if (ADMIN_EMAILS.includes(user.email)) {
+            return { data: { ...user, role: "ADMIN" } };
+          }
+
+          return {
+            data: user,
+          };
+        },
+      },
+    },
+  },
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"] as Array<UserRole>,
+        input: false,
+      },
+    },
+  },
   session: {
     expiresIn: 30 * 24 * 60 * 60,
   },
@@ -53,5 +82,15 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    nextCookies(),
+    admin({
+      defaultRole: UserRole.USER,
+      adminRoles: [UserRole.ADMIN],
+      ac,
+      roles,
+    }),
+  ],
 });
+
+export type ErrorCode = keyof typeof auth.$ERROR_CODES | "UNKNOWN";
