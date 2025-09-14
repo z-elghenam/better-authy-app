@@ -9,12 +9,17 @@ export const GetStartedButton = () => {
   const href = session ? "/profile" : "/auth/login";
 
   return (
-    <div className=" text-center space-y-4 w-full">
+    <div className="text-center space-y-4 w-full">
       {session && (
-        <p className="text-lg font-semibold">
-          hi, {session?.user.name} welcome back 👋
+        <p className="flex items-center justify-center gap-2 text-2xl font-medium">
+          <span
+            data-role={session.user.role}
+            className="size-4 rounded-full animate-pulse data-[role=USER]:bg-blue-600 data-[role=ADMIN]:bg-red-600"
+          />
+          Welcome back, {session.user.name}! 👋
         </p>
       )}
+
       <Button size="lg" asChild>
         <Link href={href}>Get started</Link>
       </Button>
