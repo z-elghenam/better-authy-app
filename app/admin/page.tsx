@@ -71,7 +71,12 @@ export default async function AdminPage() {
                 <td className="px-4 py-2">{user.id.slice(0, 8)}</td>
                 <td className="px-4 py-2">{user.name}</td>
                 <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2 text-center">{user.role}</td>
+                <td className="px-4 py-2 text-center">
+                  <UserRoleSelect
+                    userId={user.id}
+                    role={user.role as UserRole}
+                  />
+                </td>
                 <td className="px-4 py-2 text-center">
                   {user.role === "USER" ? (
                     <DeleteUserButton userId={user.id} />
