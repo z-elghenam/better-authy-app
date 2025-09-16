@@ -16,17 +16,14 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useState, useTransition } from "react";
-// import { register } from "@/actions/register";
 import { FormSuccess } from "./form-success";
 import { FormError } from "./form-error";
 import { signUp } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, setIsPending] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -50,11 +47,14 @@ export const RegisterForm = () => {
           setIsPending(false);
         },
         onError: (ctx) => {
+          console.log(ctx);
           setError(ctx.error.message);
         },
         onSuccess: () => {
-          setSuccess("Signed up successfully");
-          router.push("/profile");
+          setSuccess(
+            "Signed up successfully. Please check your email to verify your account."
+          );
+          form.reset();
         },
       }
     );
