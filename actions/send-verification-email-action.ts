@@ -12,7 +12,7 @@ export const sendVerificationEmailAction = async (email: string) => {
     if (user) {
       await sendVerificationEmail({
         email,
-        callbackURL: "/",
+        callbackURL: "/auth/verify",
       });
     }
 
