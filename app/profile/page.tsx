@@ -21,8 +21,6 @@ export default async function ProfilePage() {
     },
   });
 
-  console.log(FULL_POST_ACCESS);
-
   return (
     <div className="px-8 py-16 container mx-auto max-w-screen-lg space-y-8">
       <div className="space-y-4">
@@ -31,7 +29,7 @@ export default async function ProfilePage() {
         <div className="flex items-center gap-2">
           {session.user.role === "ADMIN" && (
             <Button size="sm" asChild>
-              <Link href="/admin/dashboard">Admin Dashboard</Link>
+              <Link href="/admin">Admin Dashboard</Link>
             </Button>
           )}
 
