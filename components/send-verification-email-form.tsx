@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { emailSchema } from "@/schemas";
+import { sendVerificationEmail } from "@/lib/auth-client";
 
 export const SendVerificationEmailForm = () => {
   const [isPending, setIsPending] = useState(false);
@@ -29,20 +30,24 @@ export const SendVerificationEmailForm = () => {
   });
 
   async function onSubmit(value: z.infer<typeof emailSchema>) {
-    try {
-      setIsPending(true);
-      const res = await sendVerificationEmailAction(value.email);
-
-      if (res.status === "success") {
-        toast.success(res.message);
-      } else {
-        toast.error(res.message);
-      }
-    } catch (err) {
-      toast.error("Unexpected error occurred.");
-    } finally {
-      setIsPending(false);
-    }
+    await sendVerificationEmail({
+      ...value,
+      callbackURL: "/auth/verify",
+      fetchOptions: {
+        onRequest: () => {
+          setIsPending(true);
+        },
+        onResponse: () => {
+          setIsPending(false);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: () => {
+          toast.success("Verification email sent successfully.");
+        },
+      },
+    });
   }
 
   return (
