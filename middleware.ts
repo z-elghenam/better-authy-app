@@ -1,4 +1,3 @@
-// middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionCookie } from "better-auth/cookies";
 
@@ -20,11 +19,9 @@ const protectedRoutes = [
 
 export async function middleware(request: NextRequest) {
   const { nextUrl } = request;
+  const pathname = nextUrl.pathname;
   const sessionCookie = getSessionCookie(request);
   const isLoggedIn = !!sessionCookie;
-
-  const pathname = nextUrl.pathname;
-
   // 1. If route is public, allow
   if (publicRoutes.includes(pathname)) {
     return NextResponse.next();
