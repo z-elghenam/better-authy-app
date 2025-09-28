@@ -28,8 +28,6 @@ interface ResetPasswordFormProps {
 }
 
 export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
@@ -42,9 +40,6 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
   });
 
   const onSubmit = async (value: ResetPasswordValues) => {
-    setError("");
-    setSuccess("");
-
     await resetPassword({
       newPassword: value.password,
       token,
@@ -59,7 +54,7 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
           toast.error(ctx.error.message);
         },
         onSuccess: () => {
-          setSuccess("Password reset successfully.");
+          toast.success("Password reset successfully.");
           router.push("/auth/login");
         },
       },
@@ -112,8 +107,6 @@ export const ResetPasswordForm = ({ token }: ResetPasswordFormProps) => {
               )}
             />
           </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
           <Button type="submit" disabled={isPending} className="w-full">
             Reset password
           </Button>
