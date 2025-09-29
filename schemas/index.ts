@@ -1,5 +1,34 @@
 import * as z from "zod";
 
+export const updateProfileSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, { message: "Name must be at least 2 characters long" })
+      .max(50, { message: "Name must be less than 50 characters" })
+      .regex(/^[a-zA-Z\s]*$/, {
+        message: "Name can only contain letters and spaces",
+      })
+      .optional()
+      .or(z.literal("")), // Allow empty string
+    profileImage: z
+      .instanceof(File)
+      .refine((file) => file.size <= 2 * 1024 * 1024, {
+        message: "Profile image must be less than 2MB",
+      })
+      .refine((file) => file.type.startsWith("image/"), {
+        message: "File must be an image",
+      })
+      .optional(),
+  })
+  .refine(
+    (data) => data.name !== undefined || data.profileImage !== undefined,
+    { message: "At least one field (name or profile image) must be provided" }
+  );
+
+// Type inference
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
+
 export const loginSchema = z.object({
   email: z.email({ message: "Email address is required" }),
   password: z
