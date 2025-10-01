@@ -17,8 +17,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { FormSuccess } from "./auth/form-success";
-import { FormError } from "./auth/form-error";
 import { useForm } from "react-hook-form";
 import { resetPasswordSchema, type ResetPasswordValues } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
