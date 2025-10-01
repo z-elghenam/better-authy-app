@@ -26,10 +26,8 @@ export const UserButton = () => {
         ) : (
           <Avatar>
             <AvatarImage
-              src={
-                user?.image ||
-                "https://docs.material-tailwind.com/img/face-2.jpg"
-              }
+              src={user?.image || ""}
+              className="object-cover object-center w-full h-full"
             />
             <AvatarFallback className="bg-sky-500">
               <FaUser className="text-white" />
