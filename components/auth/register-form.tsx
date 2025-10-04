@@ -35,6 +35,9 @@ export const RegisterForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof registerSchema>) => {
+    setError("");
+    setSuccess("");
+
     await signUp.email(
       {
         ...values,
