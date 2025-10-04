@@ -7,8 +7,19 @@ import { Button } from "@/components/ui/button";
 import { UserButton } from "@/components/auth/user-button";
 import { ModeToggle } from "@/components/dark-mode";
 
-export const Navbar = () => {
+type NavbarProps = {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image?: string | null;
+    role: "USER" | "ADMIN";
+  };
+};
+
+export const Navbar = ({ user }: NavbarProps) => {
   const pathname = usePathname();
+  const isAnAdmin = user.role === "ADMIN";
 
   return (
     <nav className="bg-secondary flex justify-between items-center p-4 rounded-xl w-[600px] shadow-sm">
@@ -25,9 +36,14 @@ export const Navbar = () => {
         >
           <Link href="/client">Client</Link>
         </Button>
-        <Button asChild variant={pathname === "/admin" ? "default" : "outline"}>
-          <Link href="/admin">Admin</Link>
-        </Button>
+        {isAnAdmin && (
+          <Button
+            asChild
+            variant={pathname === "/admin" ? "default" : "outline"}
+          >
+            <Link href="/admin">Admin</Link>
+          </Button>
+        )}
         <Button
           asChild
           variant={pathname === "/settings" ? "default" : "outline"}
@@ -37,7 +53,7 @@ export const Navbar = () => {
       </div>
       <div className="space-x-4 flex items-center justify-center">
         <ModeToggle />
-        <UserButton />
+        <UserButton user={user} />
       </div>
     </nav>
   );
