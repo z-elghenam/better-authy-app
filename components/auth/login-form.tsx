@@ -1,7 +1,7 @@
 "use client";
 import * as z from "zod";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas";
@@ -31,7 +31,6 @@ export const LoginForm = () => {
       ? "Email already in use with different provider"
       : "";
 
-  console.log(searchParams.get("error"));
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, setIsPending] = useState(false);
